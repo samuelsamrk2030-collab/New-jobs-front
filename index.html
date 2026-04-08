@@ -104,12 +104,14 @@ header{background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);color:#fff;pad
 
 <!-- PAYMENT -->
 <div class="container hidden" id="payment">
-<div class="card">
-<h2>💳 Payment</h2>
-<p id="finalPackage"></p>
-<input placeholder="Phone Number">
-<button class="btn">Pay Now</button>
-</div>
+  <div class="card">
+    <h2>💳 Payment</h2>
+    <p id="finalPackage"></p>
+
+    <input placeholder="Phone Number">
+
+    <button class="btn" onclick="makePayment()">Pay Now</button>
+  </div>
 </div>
 
 <script>
