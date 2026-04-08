@@ -162,24 +162,60 @@ function submitApplication() {
     body: JSON.stringify(data)
   })
   .then(res => res.json())
-  .then(response => {
-    alert("Application submitted successfully ✅");
-    goPayment();
-  })
-  .catch(error => {
-    alert("Error submitting application ❌");
-  });
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elite Global Careers</title>
+
+<style>
+body {
+  font-family: Arial;
+  background: #eef2f7;
+  text-align: center;
+  padding: 20px;
 }
 
-function goPayment() {
-  document.getElementById('form').classList.add('hidden');
-  document.getElementById('payment').classList.remove('hidden');
-
-  document.getElementById('finalPackage').innerText =
-    "Selected: " + pkg + " | Fee: KSh " + fee;
+.card {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  max-width: 400px;
+  margin: auto;
 }
 
-function makePayment() {
+button {
+  width: 100%;
+  padding: 15px;
+  background: #1e3c72;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h2>💳 Application Payment</h2>
+  <p><b>KSh 25 Only</b></p>
+
+  <input id="phone" placeholder="Enter Phone (2547XXXXXXXX)">
+
+  <button onclick="pay()">Pay Now</button>
+</div>
+
+<script>
+function pay() {
   const phone = document.getElementById("phone").value;
 
   fetch("https://jobs-abroad-r8k0.onrender.com/pay", {
@@ -189,7 +225,7 @@ function makePayment() {
     },
     body: JSON.stringify({
       phone: phone,
-      amount: fee
+      amount: 25
     })
   })
   .then(res => res.json())
@@ -202,3 +238,7 @@ function makePayment() {
     console.error(err);
   });
 }
+</script>
+
+</body>
+</html>
