@@ -97,8 +97,7 @@ header{background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);color:#fff;pad
 
     <textarea placeholder="Write your CV"></textarea>
 
-<button class="btn" onclick="submitApplication()">Proceed</button>
-
+<button class="btn" onclick="goPayment()">Proceed</button>
 </div>
 </div>
 
@@ -115,7 +114,14 @@ header{background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);color:#fff;pad
 </div>
 
 <script>
-let pkg='',fee=0;
+
+function goPayment() {
+  document.getElementById('form').classList.add('hidden');
+  document.getElementById('payment').classList.remove('hidden');
+
+  document.getElementById('finalPackage').innerText =
+    "Selected: " + pkg + " | Fee: KSh " + fee;
+}
 
 function goPackages(){
 document.getElementById('landing').classList.add('hidden');
