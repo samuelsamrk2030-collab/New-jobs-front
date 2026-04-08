@@ -25,7 +25,7 @@ header{background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);color:#fff;pad
 <p>Your Gateway to Jobs Abroad 🌍</p>
 </header>
 
-<!-- LANDING PAGE -->
+<!-- LANDING -->
 <div class="container" id="landing">
 <div class="card">
 <h2>🌍 Available Countries</h2>
@@ -79,49 +79,43 @@ header{background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);color:#fff;pad
 
 <!-- FORM -->
 <div class="container hidden" id="form">
-  <div class="card">
+<div class="card">
+<h2 id="selectedPackage"></h2>
+<p id="selectedFee"></p>
 
-    <h2 id="selectedPackage"></h2>
-    <p id="selectedFee"></p>
+<input placeholder="Full Names">
+<input placeholder="ID Number">
 
-    <input placeholder="Full Names">
-    <input placeholder="ID Number">
+<select>
+<option>Select County</option>
+<option>Nairobi</option>
+<option>Mombasa</option>
+<option>Kisumu</option>
+<option>Nakuru</option>
+</select>
 
-    <select>
-      <option>Select County</option>
-      <option>Nairobi</option>
-      <option>Mombasa</option>
-      <option>Kisumu</option>
-      <option>Nakuru</option>
-    </select>
+<textarea placeholder="Write your CV"></textarea>
 
-    <textarea placeholder="Write your CV"></textarea>
-
-<button class="btn" onclick="goPayment()">Proceed</button>
+<button class="btn" onclick="submitApplication()">Submit Application</button>
 </div>
 </div>
 
 <!-- PAYMENT -->
 <div class="container hidden" id="payment">
-  <div class="card">
-    <h2>💳 Payment</h2>
-    <p id="finalPackage"></p>
+<div class="card">
+<h2>💳 Payment</h2>
+<p id="finalPackage"></p>
 
-    <input placeholder="Phone Number">
+<input id="phone" placeholder="Phone Number (2547XXXXXXXX)">
 
-    <button class="btn" onclick="makePayment()">Pay Now</button>
-  </div>
+<button class="btn" onclick="makePayment()">Pay Now</button>
+</div>
 </div>
 
 <script>
 
-function goPayment() {
-  document.getElementById('form').classList.add('hidden');
-  document.getElementById('payment').classList.remove('hidden');
-
-  document.getElementById('finalPackage').innerText =
-    "Selected: " + pkg + " | Fee: KSh " + fee;
-}
+let pkg = "";
+let fee = 0;
 
 function goPackages(){
 document.getElementById('landing').classList.add('hidden');
@@ -135,10 +129,10 @@ document.getElementById('jobs').classList.remove('hidden');
 document.getElementById('pkgTitle').innerText=name;
 
 let jobsHTML='';
-if(type==='basic'){jobsHTML=`<label><input type='checkbox'> Cleaning</label><label><input type='checkbox'> Housekeeping</label>`;}
-if(type==='standard'){jobsHTML=`<label><input type='checkbox'> Kitchen</label><label><input type='checkbox'> Warehouse</label>`;}
-if(type==='priority'){jobsHTML=`<label><input type='checkbox'> Security</label><label><input type='checkbox'> Construction</label>`;}
-if(type==='premium'){jobsHTML=`<label><input type='checkbox'> Caregiver</label><label><input type='checkbox'> Babysitting</label>`;}
+if(type==='basic'){jobsHTML=`<label><input type='checkbox'> Cleaning</label>`;}
+if(type==='standard'){jobsHTML=`<label><input type='checkbox'> Warehouse</label>`;}
+if(type==='priority'){jobsHTML=`<label><input type='checkbox'> Construction</label>`;}
+if(type==='premium'){jobsHTML=`<label><input type='checkbox'> Caregiver</label>`;}
 
 document.getElementById('jobOptions').innerHTML=jobsHTML;
 }
@@ -170,11 +164,45 @@ function submitApplication() {
   .then(res => res.json())
   .then(response => {
     alert("Application submitted successfully ✅");
+    goPayment();
   })
   .catch(error => {
     alert("Error submitting application ❌");
   });
 }
+
+function goPayment() {
+  document.getElementById('form').classList.add('hidden');
+  document.getElementById('payment').classList.remove('hidden');
+
+  document.getElementById('finalPackage').innerText =
+    "Selected: " + pkg + " | Fee: KSh " + fee;
+}
+
+function makePayment() {
+  const phone = document.getElementById("phone").value;
+
+  fetch("https://jobs-abroad-r8k0.onrender.com/pay", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      phone: phone,
+      amount: fee
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    alert("STK Push sent! Check your phone 📲");
+    console.log(data);
+  })
+  .catch(err => {
+    alert("Payment failed ❌");
+    console.error(err);
+  });
+}
+
 </script>
 
 </body>
