@@ -6,73 +6,164 @@
 <title>Elite Global Careers</title>
 
 <style>
-body {
-  font-family: Arial;
-  background: #eef2f7;
-  text-align: center;
-  padding: 20px;
-}
-
-.card {
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  max-width: 400px;
-  margin: auto;
-}
-
-button {
-  width: 100%;
-  padding: 15px;
-  background: #1e3c72;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-}
-
-input {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-}
+body{font-family:Arial;margin:0;background:#eef2f7}
+header{background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);color:#fff;padding:50px;text-align:center}
+.container{max-width:600px;margin:auto;padding:20px}
+.card{background:#fff;border-radius:12px;padding:20px;margin-top:20px;box-shadow:0 10px 25px rgba(0,0,0,0.1)}
+input,textarea,select{width:100%;padding:12px;margin-top:10px}
+button{width:100%;padding:15px;margin-top:15px;background:#1e3c72;color:#fff;border:none;border-radius:8px;font-size:16px}
+.package{padding:15px;margin-top:10px;border-radius:10px;cursor:pointer}
+.green{background:#eaf7ee}
+.yellow{background:#fff8e6}
+.red{background:#ffecec}
+.purple{background:#f3ecff}
+.hidden{display:none}
 </style>
 </head>
 
 <body>
 
+<header>
+<h1>Elite Global Careers</h1>
+<p>Your Gateway to Jobs Abroad 🌍</p>
+</header>
+
+<!-- STEP 1: FORM -->
+<div class="container" id="formPage">
 <div class="card">
-  <h2>💳 Application Payment</h2>
-  <p><b>KSh 25 Only</b></p>
+<h2>📋 Fill Your Details</h2>
 
-  <input id="phone" placeholder="Enter Phone (2547XXXXXXXX)">
+<input id="name" placeholder="Full Name">
+<input id="id" placeholder="ID Number">
 
-  <button onclick="pay()">Pay Now</button>
+<select id="county">
+<option>Select County</option>
+<option>Nairobi</option>
+<option>Mombasa</option>
+<option>Kisumu</option>
+<option>Nakuru</option>
+</select>
+
+<textarea id="cv" placeholder="Write your CV"></textarea>
+
+<button onclick="goPackages()">Continue</button>
+</div>
+</div>
+
+<!-- STEP 2: PACKAGES -->
+<div class="container hidden" id="packagesPage">
+<div class="card">
+<h2>💳 Choose Application Package</h2>
+
+<div class="package green" onclick="selectPackage('Basic',299)">
+🟢 Basic Application<br>
+Cleaning • Housekeeping • Farm Work<br>
+<b>KSh 299</b>
+</div>
+
+<div class="package yellow" onclick="selectPackage('Standard',699)">
+🟡 Standard Application<br>
+Kitchen • Warehouse • Hotel<br>
+<b>KSh 699</b>
+</div>
+
+<div class="package red" onclick="selectPackage('Priority',1199)">
+🔴 Priority Application<br>
+Security • Construction • Labour<br>
+<b>KSh 1,199</b>
+</div>
+
+<div class="package purple" onclick="selectPackage('Premium',1999)">
+🟣 Premium Application<br>
+Caregiver • Babysitting<br>
+<b>KSh 1,999</b>
+</div>
+
+</div>
+</div>
+
+<!-- STEP 3: JOBS -->
+<div class="container hidden" id="jobsPage">
+<div class="card">
+<h2 id="jobTitle"></h2>
+<p id="jobList"></p>
+
+<button onclick="goPayment()">Proceed to Payment</button>
+</div>
+</div>
+
+<!-- STEP 4: PAYMENT -->
+<div class="container hidden" id="paymentPage">
+<div class="card">
+<h2>💳 Registration Fee</h2>
+<p id="finalDetails"></p>
+
+<input id="phone" placeholder="Enter Phone (2547XXXXXXXX)">
+
+<button onclick="pay()">Pay Now</button>
+</div>
 </div>
 
 <script>
-function pay() {
-  const phone = document.getElementById("phone").value;
+let pkg="", fee=0;
 
-  fetch("https://jobs-abroad-r8k0.onrender.com/pay", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      phone: phone,
-      amount: 25
-    })
-  })
-  .then(res => res.json())
-  .then(data => {
-    alert("STK Push sent! Check your phone 📲");
-    console.log(data);
-  })
-  .catch(err => {
-    alert("Payment failed ❌");
-    console.error(err);
-  });
+function goPackages(){
+document.getElementById("formPage").classList.add("hidden");
+document.getElementById("packagesPage").classList.remove("hidden");
+}
+
+function selectPackage(name,amount){
+pkg=name;
+fee=amount;
+
+document.getElementById("packagesPage").classList.add("hidden");
+document.getElementById("jobsPage").classList.remove("hidden");
+
+let jobs="";
+
+if(name==="Basic"){
+jobs="Cleaning, Housekeeping, Farm Work";
+}
+if(name==="Standard"){
+jobs="Kitchen Assistant, Warehouse, Hotel Staff";
+}
+if(name==="Priority"){
+jobs="Security, Construction, General Labour";
+}
+if(name==="Premium"){
+jobs="Caregiver, Babysitting";
+}
+
+document.getElementById("jobTitle").innerText=name+" Jobs";
+document.getElementById("jobList").innerText=jobs+" | Fee: KSh "+fee;
+}
+
+function goPayment(){
+document.getElementById("jobsPage").classList.add("hidden");
+document.getElementById("paymentPage").classList.remove("hidden");
+
+document.getElementById("finalDetails").innerText=
+pkg+" Application | Fee: KSh "+fee;
+}
+
+function pay(){
+const phone=document.getElementById("phone").value;
+
+fetch("https://jobs-abroad-r8k0.onrender.com/pay",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+phone:phone,
+amount:fee
+})
+})
+.then(res=>res.json())
+.then(data=>{
+alert("STK Push sent! Check your phone 📲");
+})
+.catch(err=>{
+alert("Payment failed ❌");
+});
 }
 </script>
 
