@@ -79,20 +79,26 @@ header{background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);color:#fff;pad
 
 <!-- FORM -->
 <div class="container hidden" id="form">
-<div class="card">
-<h2 id="selectedPackage"></h2>
-<p id="selectedFee"></p>
-<input placeholder="Full Names">
-<input placeholder="ID Number">
-<select>
-<option>Select County</option>
-<option>Nairobi</option>
-<option>Mombasa</option>
-<option>Kisumu</option>
-<option>Nakuru</option>
-</select>
-<textarea placeholder="Write your CV"></textarea>
-<button class="btn" onclick="goPayment()">Proceed</button>
+  <div class="card">
+
+    <h2 id="selectedPackage"></h2>
+    <p id="selectedFee"></p>
+
+    <input placeholder="Full Names">
+    <input placeholder="ID Number">
+
+    <select>
+      <option>Select County</option>
+      <option>Nairobi</option>
+      <option>Mombasa</option>
+      <option>Kisumu</option>
+      <option>Nakuru</option>
+    </select>
+
+    <textarea placeholder="Write your CV"></textarea>
+
+<button class="btn" onclick="submitApplication()">Proceed</button>
+
 </div>
 </div>
 
@@ -136,10 +142,30 @@ document.getElementById('selectedPackage').innerText=pkg;
 document.getElementById('selectedFee').innerText='Fee: KSh '+fee;
 }
 
-function goPayment(){
-document.getElementById('form').classList.add('hidden');
-document.getElementById('payment').classList.remove('hidden');
-document.getElementById('finalPackage').innerText=pkg+' - KSh '+fee;
+function submitApplication() {
+  const name = document.querySelector("input[placeholder='Full Names']").value;
+  const id = document.querySelector("input[placeholder='ID Number']").value;
+
+  const data = {
+    name: name,
+    id: id,
+    package: pkg
+  };
+
+  fetch("https://jobs-abroad-r8k0.onrender.com/apply", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  })
+  .then(res => res.json())
+  .then(response => {
+    alert("Application submitted successfully ✅");
+  })
+  .catch(error => {
+    alert("Error submitting application ❌");
+  });
 }
 </script>
 
